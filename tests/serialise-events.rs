@@ -1,9 +1,6 @@
 // This file is dual-licensed under the Artistic License 2.0 as per the
 // LICENSE.ARTISTIC file, and the Creative Commons Zero 1.0 license.
 
-// FIXME: `anymap` crate triggers this lint and we cannot do anything here.
-#![allow(where_clauses_object_safety)]
-
 use notify::event::*;
 #[cfg(feature = "serde")]
 use serde_json::json;
@@ -20,9 +17,9 @@ fn events_are_debuggable() {
         String::from("Access(Open(Execute))")
     );
 
-    let mut attrs = AnyMap::new();
-    attrs.insert(Info("unmount".into()));
-    attrs.insert(Flag::Rescan);
+    let mut attrs = EventAttributes::new();
+    attrs.set_info("unmount".into());
+    attrs.set_flag(Flag::Rescan);
 
     assert_eq!(
         format!(
