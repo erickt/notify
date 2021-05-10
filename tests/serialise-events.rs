@@ -17,19 +17,13 @@ fn events_are_debuggable() {
         String::from("Access(Open(Execute))")
     );
 
-    let mut attrs = EventAttributes::new();
-    attrs.set_info("unmount".into());
-    attrs.set_flag(Flag::Rescan);
+    let event = Event::new(EventKind::Remove(RemoveKind::Other))
+        .add_path("/example".into())
+        .set_info("unmount".into())
+        .set_flag(Flag::Rescan);
 
     assert_eq!(
-        format!(
-            "{:?}",
-            Event {
-                kind: EventKind::Remove(RemoveKind::Other),
-                paths: vec!["/example".into()],
-                attrs
-            }
-        ),
+        format!("{:?}", event),
         String::from(
             "Event { kind: Remove(Other), paths: [\"/example\"], attr:tracker: None, attr:flag: Some(Rescan), attr:info: Some(\"unmount\"), attr:source: None }"
         )

@@ -318,7 +318,7 @@ pub struct Event {
     /// bitmasks or bitmaps, such that if the mask is ever extended with new event types the
     /// backend will not gain bugs due to not matching new unknown event types.
     #[cfg_attr(feature = "serde", serde(rename = "type"))]
-    pub kind: EventKind,
+    kind: EventKind,
 
     /// Paths the event is about, if known.
     ///
@@ -328,7 +328,7 @@ pub struct Event {
     ///
     /// The order of the paths is likely to be significant! For example, renames where both ends of
     /// the name change are known will have the "source" path first, and the "target" path last.
-    pub paths: Vec<PathBuf>,
+    paths: Vec<PathBuf>,
 
     // "What should be in the struct" and "what can go in the attrs" is an interesting question.
     //
@@ -357,7 +357,7 @@ pub struct Event {
     /// `Clone` properties. Some data added here is considered for comparing and hashing, but not
     /// all: at this writing this is `Tracker`, `Flag`, `Info`, and `Source`.
     #[cfg_attr(feature = "serde", serde(default = "Attributes::default"))]
-    pub attrs: EventAttributes,
+    attrs: EventAttributes,
 }
 
 /// Additional attributes of the event.
@@ -500,9 +500,26 @@ pub enum Flag {
     Rescan,
 }
 
-
-
 impl Event {
+    /// Creates a new `Event` given a kind.
+    pub fn new(kind: EventKind) -> Self {
+        Self {
+            kind,
+            paths: Vec::new(),
+            attrs: EventAttributes::new(),
+        }
+    }
+
+    /// Kind or type of the event.
+    pub fn kind(&self) -> EventKind {
+        self.kind.clone()
+    }
+
+    /// Paths the event is about, if known.
+    pub fn paths(&self) -> &[PathBuf] {
+        &self.paths
+    }
+
     /// Retrieves the tracker ID for an event directly, if present.
     pub fn tracker(&self) -> Option<usize> {
         self.attrs.tracker()
@@ -521,15 +538,6 @@ impl Event {
     /// Retrieves the source for an event directly, if present.
     pub fn source(&self) -> Option<&str> {
         self.attrs.source()
-    }
-
-    /// Creates a new `Event` given a kind.
-    pub fn new(kind: EventKind) -> Self {
-        Self {
-            kind,
-            paths: Vec::new(),
-            attrs: EventAttributes::new(),
-        }
     }
 
     /// Sets the kind.

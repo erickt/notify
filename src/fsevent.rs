@@ -550,7 +550,7 @@ fn test_fsevent_watcher_drop() {
 
     for res in rx {
         let e = res.unwrap();
-        println!("debug => {:?} {:?}", e.kind, e.paths);
+        println!("debug => {:?} {:?}", e.kind(), e.paths());
     }
 
     println!("in test: {} works", file!());
